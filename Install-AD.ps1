@@ -9,30 +9,29 @@ Param
                ValueFromPipelineByPropertyName=$true,
                Position=0)]
     [String]$DomainName,
+ 
 
-    # localAdminName
+    # SafeModeAdministratorPassword
     [Parameter(Mandatory=$true,
                ValueFromPipelineByPropertyName=$true,
                Position=1)]
-    [String]$localAdminName,
-
-    # localAdminPassword
-    [Parameter(Mandatory=$true,
-               ValueFromPipelineByPropertyName=$true,
-               Position=0)]
-    [String]$localAdminPassword
+    [String]$SafeModeAdministratorPassword
 
 )
 #endregion
 
-Get-Date    
+$DeploymentStartDate = Get-Date    
+Write-Output "Depoyment started at $DeploymentStartDate"
 
 #region Install Domain
 $LocalAdminPWord = ConvertTo-SecureString –String "$localAdminPassword" –AsPlainText -Force
-        
+   
+#install AAD Feature
+Install-WindowsFeature AD-Domain-Services -IncludeAllSubFeature -IncludeManagementTools
+
 #Create Domain
-Install-ADDSForest -CreateDnsDelegation:$false -DomainName $DomainName -SkipPreChecks -SafeModeAdministratorPassword $LocalAdminPWord -InstallDns -Confirm:$false
+Install-ADDSForest -CreateDnsDelegation:$false -DomainName $DomainName -SkipPreChecks -SafeModeAdministratorPassword $SafeModeAdministratorPassword -InstallDns -Confirm:$false 
+#-DatabasePath "E:\NTDS" -SysvolPath "E:\SYSVOL" -LogPath "E:\Logs"
 
-start-sleep 60
-
-Get-Date
+$DeploymentStopDate = Get-Date    
+Write-Output "Depoyment stoped at $DeploymentStopDate"
