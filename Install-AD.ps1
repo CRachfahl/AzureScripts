@@ -23,13 +23,16 @@ $DeploymentStartDate = Get-Date
 Write-Output "Depoyment started at $DeploymentStartDate"
 
 #region Install Domain
-$LocalAdminPWord = ConvertTo-SecureString –String "$localAdminPassword" –AsPlainText -Force
+Write-Output "creating $SafeModeAdminPwd SecureSting"
+$SafeModeAdministratorPwd = ConvertTo-SecureString -String "$SafeModeAdministratorPassword" -AsPlainText -Force
    
 #install AAD Feature
+Write-Output "Installing AD-Domain-Service feature"
 Install-WindowsFeature AD-Domain-Services -IncludeAllSubFeature -IncludeManagementTools
 
 #Create Domain
-Install-ADDSForest -CreateDnsDelegation:$false -DomainName $DomainName -SkipPreChecks -SafeModeAdministratorPassword $SafeModeAdministratorPassword -InstallDns -Confirm:$false 
+Write-Output "Install ADDSForest"
+Install-ADDSForest -CreateDnsDelegation:$false -DomainName $DomainName -SkipPreChecks -SafeModeAdministratorPassword $SafeModeAdministratorPwd -InstallDns -Confirm:$false 
 #-DatabasePath "E:\NTDS" -SysvolPath "E:\SYSVOL" -LogPath "E:\Logs"
 
 $DeploymentStopDate = Get-Date    
