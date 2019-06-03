@@ -5,17 +5,16 @@
 Param
 (
      # DomainName
-    [Parameter(Mandatory=$true,
+    [Parameter(Mandatory=$false,
                ValueFromPipelineByPropertyName=$true,
                Position=0)]
-    [String]$DomainName,
- 
+    [String]$DomainName ="itcamp.org",
 
     # SafeModeAdministratorPassword
-    [Parameter(Mandatory=$true,
+    [Parameter(Mandatory=$false,
                ValueFromPipelineByPropertyName=$true,
                Position=1)]
-    [String]$SafeModeAdministratorPassword
+    [String]$SafeModeAdministratorPassword = "ADR3setPassword"
 
 )
 #endregion
